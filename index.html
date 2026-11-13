@@ -10,32 +10,34 @@
   <body>
     <div class="app-layout">
       <nav class="sidebar" aria-label="Game navigation">
-        <div class="sidebar-title">Cosmic Dust</div>
         <button class="nav-button active" id="main-tab" type="button">Main</button>
         <button class="nav-button hidden" id="quarks-tab" type="button">Quarks</button>
         <button class="nav-button hidden" id="automation-tab" type="button">Automation</button>
-        <button class="nav-button hidden" id="particles-tab" type="button">Particles</button>
         <button class="nav-button" id="statistics-tab" type="button">Statistics</button>
-        <button class="nav-button" id="help-tab" type="button">Help</button>
+        <button class="nav-button" id="settings-tab" type="button">Settings</button>
       </nav>
 
       <main class="app-shell">
         <header class="topbar">
-          <h1 id="page-title">Cosmic Dust</h1>
+          <h1 id="page-title"></h1>
           <div class="formula-display" id="formula-display">Gain/s = 0 × (1.00 × 1.00)<sup>1.00</sup> × 1.00 × 1.00 ÷ 1.00 = 0</div>
+          <div class="challenge-banner hidden" id="challenge-banner"><span id="challenge-banner-text">Proton challenge</span><button id="leave-challenge-button" type="button">Leave challenge</button></div>
           <div class="topbar-actions">
             <div class="resource-box"><span>Entropy</span><strong><span id="entropy-count">0</span><small> / <span id="entropy-cap">10.00</span></small></strong></div>
-            <button class="reset-button" id="reset-button" type="button">Reset</button>
           </div>
         </header>
 
-        <section class="page-view" id="main-view">
+        <div class="global-actions">
           <aside class="prestige-panel hidden" id="quarkify-panel">
-            <span>Quarkify</span>
+            <span id="quarkify-action-label">Quarkify</span>
             <strong>+<span id="quark-gain">1</span> quark<span id="quark-gain-plural"></span></strong>
             <span>Requires <span id="quarkify-requirement">1.00Dc</span> dust</span>
             <button id="quarkify-button" type="button">Quarkify</button>
           </aside>
+          <button class="atomize-button hidden" id="atomize-button" type="button" disabled>Atomize coming soon</button>
+        </div>
+
+        <section class="page-view" id="main-view">
           <section class="hero-card" aria-labelledby="dust-heading">
             <div class="hero-copy">
               <h2 id="dust-heading"><span id="dust-count">0</span> dust</h2>
@@ -137,16 +139,40 @@
         </section>
 
         <section class="page-view info-view hidden" id="particles-view">
-          <h2>Subatomic Particle Creation</h2>
-          <div class="milestone-card unlocked">
-            <strong>100 total quarks</strong>
-            <p>Create subatomic particles from your quarks.</p>
-            <span>Unlocked</span>
+          <div class="quark-heading"><div class="subtab-switch"><button class="subtab-arrow" id="quarks-overview-tab" type="button" aria-label="Switch to Quarks">&larr;</button><span class="subtab-label">Quarks</span></div><h2>Subatomic</h2></div>
+          <div class="challenge-list">
+            <article class="challenge-card unlocked" data-challenge="proton" role="button" tabindex="0">
+              <strong>Proton challenge</strong><p>Click gain is boosted, but passive production is disabled. Reach 1e33 dust and reset to complete it.</p><span id="proton-challenge-status">Unlocked</span>
+            </article>
+            <article class="challenge-card locked" data-challenge="electron" role="button" tabindex="0">
+              <strong>Electron challenge</strong><p>Cosmic dust gain is reduced, but upgrade costs are lower.</p><span id="electron-challenge-status">Locked · Complete Proton challenge</span>
+            </article>
+            <article class="challenge-card locked" data-challenge="neutron" role="button" tabindex="0">
+              <strong>Neutron challenge</strong><p>Single upgrades cannot be purchased during the challenge.</p><span id="neutron-challenge-status">Locked · Complete Electron challenge</span>
+            </article>
+          </div>
+          <div class="bohr-builder">
+            <h3>Bohr model</h3>
+            <p>Drag particles onto the model.</p>
+            <div class="particle-palette">
+              <label class="particle-control"><span class="particle-piece proton-piece">Proton</span><input id="proton-count" type="number" min="0" max="118" value="0" /></label>
+              <label class="particle-control"><span class="particle-piece neutron-piece">Neutron</span><input id="neutron-count" type="number" min="0" max="236" value="0" /></label>
+              <label class="particle-control"><span class="particle-piece electron-piece">Electron</span><input id="electron-count" type="number" min="0" max="118" value="0" /></label>
+            </div>
+            <div class="element-summary">
+              <strong id="element-name">Empty model</strong>
+              <span id="element-cost">Cost: 0 up · 0 down · 0 entropy</span>
+            </div>
+            <div class="bohr-model" id="bohr-model">
+              <div class="bohr-shell bohr-shell-inner"></div>
+              <div class="bohr-shell bohr-shell-outer"></div>
+              <div class="bohr-nucleus" id="bohr-nucleus">Drop particles here</div>
+            </div>
           </div>
         </section>
 
         <section class="page-view info-view hidden" id="quarks-view">
-          <h2>Quarks</h2>
+          <div class="quark-heading"><h2>Quarks</h2><div class="subtab-switch hidden" id="subatomic-switch"><span class="subtab-label">Subatomic</span><button class="subtab-arrow" id="subatomic-tab" type="button" aria-label="Switch to Subatomic">&rarr;</button></div></div>
           <p class="quark-count"><span id="unassigned-quarks">0</span> unassigned · <span id="total-quarks">0</span> total</p>
           <div class="quark-grid">
             <article class="quark-card" data-quark-type="up" role="button" tabindex="0">
@@ -190,28 +216,32 @@
             </article>
             <article class="milestone-card">
               <strong>20 total quarks</strong>
-              <p>Start each quark run with 1,000 cosmic dust.</p>
+              <p>Start each quark run with 1,000 cosmic dust. Quarkify scaling starts here.</p>
               <span id="starting-dust-status">Locked</span>
             </article>
             <article class="milestone-card">
-              <strong>100 total quarks</strong>
-              <p>Unlocks subatomic particle creation.</p>
+              <strong>30 total quarks</strong>
+              <p>Unlocks proton, neutron, and electron creation.</p>
               <span id="particle-creation-status">Locked</span>
             </article>
           </div>
         </section>
 
-        <section class="page-view info-view hidden" id="help-view">
-          <h2>Help</h2>
-          <div class="help-copy">
-            <p>Click Collect to gain dust.</p>
-            <p>You adds 1 per second and 1 per click.</p>
-            <p>Multiplier increases M.</p>
-            <p>Temperature increases T.</p>
-            <p class="formula">Gain = M(Y)<sup>T</sup></p>
-            <p>Y = 1 + You level</p>
-            <p>M = 1 + Multiplier level</p>
-            <p>T = 1 + (Temperature level × 0.1)</p>
+        <section class="page-view info-view hidden" id="settings-view">
+          <h2>Settings</h2>
+          <div class="settings-controls">
+            <label class="settings-row" for="update-rate">
+              <span>Update rate (33–1000 ms)</span>
+              <input id="update-rate" type="number" min="33" max="1000" step="1" />
+            </label>
+            <button class="settings-button" id="hard-reset-button" type="button">Hard reset</button>
+            <button class="settings-button" id="export-button" type="button">Export game to clipboard</button>
+            <label class="settings-import">
+              <span>Import game</span>
+              <textarea id="import-data" rows="5" spellcheck="false" placeholder="Paste an exported save here"></textarea>
+              <button class="settings-button" id="import-button" type="button">Import save</button>
+            </label>
+            <p class="settings-status" id="settings-status" aria-live="polite"></p>
           </div>
         </section>
       </main>
