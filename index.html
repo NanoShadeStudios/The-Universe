@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Cosmic dust prototype game." />
+    <title>Cosmic Dust</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <nav class="sidebar" aria-label="Game navigation">
+        <div class="sidebar-title">Cosmic Dust</div>
+        <button class="nav-button active" id="main-tab" type="button">Main</button>
+        <button class="nav-button hidden" id="quarks-tab" type="button">Quarks</button>
+        <button class="nav-button hidden" id="automation-tab" type="button">Automation</button>
+        <button class="nav-button hidden" id="particles-tab" type="button">Particles</button>
+        <button class="nav-button" id="statistics-tab" type="button">Statistics</button>
+        <button class="nav-button" id="help-tab" type="button">Help</button>
+      </nav>
+
+      <main class="app-shell">
+        <header class="topbar">
+          <h1 id="page-title">Cosmic Dust</h1>
+          <div class="formula-display" id="formula-display">Gain/s = 0 × (1.00 × 1.00)<sup>1.00</sup> × 1.00 × 1.00 ÷ 1.00 = 0</div>
+          <div class="topbar-actions">
+            <div class="resource-box"><span>Entropy</span><strong><span id="entropy-count">0</span><small> / <span id="entropy-cap">10.00</span></small></strong></div>
+            <button class="reset-button" id="reset-button" type="button">Reset</button>
+          </div>
+        </header>
+
+        <section class="page-view" id="main-view">
+          <aside class="prestige-panel hidden" id="quarkify-panel">
+            <span>Quarkify</span>
+            <strong>+<span id="quark-gain">1</span> quark<span id="quark-gain-plural"></span></strong>
+            <span>Requires <span id="quarkify-requirement">1.00Dc</span> dust</span>
+            <button id="quarkify-button" type="button">Quarkify</button>
+          </aside>
+          <section class="hero-card" aria-labelledby="dust-heading">
+            <div class="hero-copy">
+              <h2 id="dust-heading"><span id="dust-count">0</span> dust</h2>
+              <button class="dust-button" id="collect-button" type="button" aria-label="Collect cosmic dust"></button>
+            </div>
+          </section>
+
+          <section class="dashboard" aria-label="Laboratory controls">
+            <div class="section-heading"><h2>Upgrades</h2></div>
+            <div class="upgrade-grid">
+              <article class="upgrade-card" data-upgrade="collector" data-tooltip="Adds 1 dust per second and 1 dust per click." role="button" tabindex="0">
+                <div class="upgrade-info">
+                  <div class="upgrade-title-row"><h3>You</h3><span class="level" id="collector-level">Lv. 0</span></div>
+                  <span class="boost" id="collector-boost">+0/s · +0/click</span>
+                  <button class="upgrade-button" id="collector-button" type="button"><span>Buy</span><strong id="collector-cost">20</strong></button>
+                </div>
+              </article>
+              <article class="upgrade-card" data-upgrade="multiplier" data-tooltip="Increases the multiplier used by the dust formula." role="button" tabindex="0">
+                <div class="upgrade-info">
+                  <div class="upgrade-title-row"><h3>Multiplier</h3><span class="level" id="multiplier-level">Lv. 0</span></div>
+                  <span class="boost" id="multiplier-boost">×1.00 M</span>
+                  <button class="upgrade-button" id="multiplier-button" type="button"><span>Buy</span><strong id="multiplier-cost">100</strong></button>
+                </div>
+              </article>
+              <article class="upgrade-card" data-upgrade="temperature" data-tooltip="Raises the exponent, making the multiplier compound faster." role="button" tabindex="0">
+                <div class="upgrade-info">
+                  <div class="upgrade-title-row"><h3>Temperature</h3><span class="level" id="temperature-level">Lv. 0</span></div>
+                  <span class="boost" id="temperature-boost">+0.0 T</span>
+                  <button class="upgrade-button" id="temperature-button" type="button"><span>Buy</span><strong id="temperature-cost">500</strong></button>
+                </div>
+              </article>
+              <article class="upgrade-card" data-single-upgrade="trioEffect" data-tooltip="Increases M for every complete set of 3 assigned quarks." role="button" tabindex="0">
+                <div><h3>TrioEffect</h3></div>
+                <span class="boost" id="trio-effect-boost">×1.00 M</span>
+                <span class="unlock-requirement" id="trioEffect-unlock">15 quarks · 10 entropy</span>
+                <button class="single-button" id="trioEffect-button" type="button"><span id="trioEffect-status">Locked</span><strong id="trioEffect-cost">1.00T</strong></button>
+              </article>
+              <article class="upgrade-card" data-single-upgrade="focus" data-tooltip="Multiplies dust gain based on your highest quark stack." role="button" tabindex="0">
+                <div><h3>Focus</h3></div>
+                <span class="boost" id="focus-boost">×1.00 gain</span>
+                <span class="unlock-requirement" id="focus-unlock">15 quarks · 11 entropy</span>
+                <button class="single-button" id="focus-button" type="button"><span id="focus-status">Locked</span><strong id="focus-cost">1.00Qa</strong></button>
+              </article>
+              <article class="upgrade-card" data-single-upgrade="clump" data-tooltip="Boosts click gain by 1% per You level." role="button" tabindex="0">
+                <div><h3>Clump</h3></div>
+                <span class="boost" id="clump-boost">+0% click</span>
+                <span class="unlock-requirement" id="clump-unlock">1 entropy</span>
+                <button class="single-button" id="clump-button" type="button"><span id="clump-status">Locked</span><strong id="clump-cost">1.00k</strong></button>
+              </article>
+              <article class="upgrade-card" data-single-upgrade="friction" data-tooltip="Clicks make Temperature stronger." role="button" tabindex="0">
+                <div><h3>Friction</h3></div>
+                <span class="boost" id="friction-boost">+0.0 T</span>
+                <span class="unlock-requirement" id="friction-unlock">3 entropy</span>
+                <button class="single-button" id="friction-button" type="button"><span id="friction-status">Locked</span><strong id="friction-cost">1.00m</strong></button>
+              </article>
+              <article class="upgrade-card" data-single-upgrade="magnet" data-tooltip="Boosts Y by 0.5% per entropy." role="button" tabindex="0">
+                <div><h3>Magnet</h3></div>
+                <span class="boost" id="magnet-boost">+0% Y</span>
+                <span class="unlock-requirement" id="magnet-unlock">5 entropy</span>
+                <button class="single-button" id="magnet-button" type="button"><span id="magnet-status">Locked</span><strong id="magnet-cost">1.00T</strong></button>
+              </article>
+              <article class="upgrade-card" data-single-upgrade="swirl" data-tooltip="Boosts M by 1% per repeatable level." role="button" tabindex="0">
+                <div><h3>Swirl</h3></div>
+                <span class="boost" id="swirl-boost">+0% M</span>
+                <span class="unlock-requirement" id="swirl-unlock">9 entropy</span>
+                <button class="single-button" id="swirl-button" type="button"><span id="swirl-status">Locked</span><strong id="swirl-cost">100.00Qi</strong></button>
+              </article>
+              <article class="upgrade-card" data-single-upgrade="chain" data-tooltip="Multiplies all gain by 1.5 per single upgrade." role="button" tabindex="0">
+                <div><h3>Chain reaction</h3></div>
+                <span class="boost" id="chain-boost">×1.00 gain</span>
+                <span class="unlock-requirement" id="chain-unlock">10 entropy</span>
+                <button class="single-button" id="chain-button" type="button"><span id="chain-status">Locked</span><strong id="chain-cost">1.00Oc</strong></button>
+              </article>
+            </div>
+          </section>
+        </section>
+
+        <section class="page-view info-view hidden" id="statistics-view">
+          <h2>Statistics</h2>
+          <dl class="stats-list">
+            <div><dt>Total dust</dt><dd id="stat-dust">0</dd></div>
+            <div><dt>Per click</dt><dd id="stat-click">1</dd></div>
+            <div><dt>Per second</dt><dd id="stat-rate">0</dd></div>
+            <div><dt>Entropy</dt><dd id="stat-entropy">0</dd></div>
+            <div><dt>You</dt><dd id="stat-you">Lv. 0</dd></div>
+            <div><dt>Multiplier</dt><dd id="stat-multiplier">Lv. 0</dd></div>
+            <div><dt>Temperature</dt><dd id="stat-temperature">Lv. 0</dd></div>
+          </dl>
+        </section>
+
+        <section class="page-view info-view hidden" id="automation-view">
+          <h2>Automation</h2>
+          <div class="automation-controls">
+            <label class="automation-toggle"><input data-automation="collector" type="checkbox" checked /> <span>You</span></label>
+            <label class="automation-toggle"><input data-automation="multiplier" type="checkbox" checked /> <span>Multiplier</span></label>
+            <label class="automation-toggle"><input data-automation="temperature" type="checkbox" checked /> <span>Temperature</span></label>
+            <label class="automation-toggle"><input id="single-automation-enabled" type="checkbox" checked /> <span>Single upgrades</span></label>
+          </div>
+        </section>
+
+        <section class="page-view info-view hidden" id="particles-view">
+          <h2>Subatomic Particle Creation</h2>
+          <div class="milestone-card unlocked">
+            <strong>100 total quarks</strong>
+            <p>Create subatomic particles from your quarks.</p>
+            <span>Unlocked</span>
+          </div>
+        </section>
+
+        <section class="page-view info-view hidden" id="quarks-view">
+          <h2>Quarks</h2>
+          <p class="quark-count"><span id="unassigned-quarks">0</span> unassigned · <span id="total-quarks">0</span> total</p>
+          <div class="quark-grid">
+            <article class="quark-card" data-quark-type="up" role="button" tabindex="0">
+              <h3>Up</h3><p>Stability boost.</p><strong id="up-quarks">0</strong>
+            </article>
+            <article class="quark-card" data-quark-type="down" role="button" tabindex="0">
+              <h3>Down</h3><p>Stability boost.</p><strong id="down-quarks">0</strong>
+            </article>
+            <article class="quark-card" data-quark-type="strange" role="button" tabindex="0">
+              <h3>Strange</h3><p id="strange-effect">×1.00 dust production right now.</p><strong id="strange-quarks">0</strong>
+            </article>
+            <article class="quark-card" data-quark-type="charm" role="button" tabindex="0">
+              <h3>Charm</h3><p>Lower repeatable cost scaling.</p><strong id="charm-quarks">0</strong>
+            </article>
+            <article class="quark-card" data-quark-type="top" role="button" tabindex="0">
+              <h3>Top</h3><p id="top-effect">×1.00 dust production.</p><strong id="top-quarks">0</strong>
+            </article>
+            <article class="quark-card" data-quark-type="bottom" role="button" tabindex="0">
+              <h3>Bottom</h3><p>Stronger single upgrades.</p><strong id="bottom-quarks">0</strong>
+            </article>
+          </div>
+          <div class="stability-summary">
+            <strong>Stability <span id="stability-count">0.00</span></strong>
+            <span id="stability-boost">+0.00% entropy gain · +0.00 entropy cap</span>
+          </div>
+          <div class="milestone-list quark-milestones">
+            <article class="milestone-card">
+              <strong>1 total quark</strong>
+              <p>Unlocks automation for You, Multiplier, and Temperature.</p>
+              <span id="repeatable-automation-status">Locked</span>
+            </article>
+            <article class="milestone-card">
+              <strong>2 total quarks</strong>
+              <p>Upgrade purchases no longer spend cosmic dust.</p>
+              <span id="free-upgrades-status">Locked</span>
+            </article>
+            <article class="milestone-card">
+              <strong>6 total quarks</strong>
+              <p>Unlocks automation for single upgrades.</p>
+              <span id="single-automation-status">Locked</span>
+            </article>
+            <article class="milestone-card">
+              <strong>20 total quarks</strong>
+              <p>Start each quark run with 1,000 cosmic dust.</p>
+              <span id="starting-dust-status">Locked</span>
+            </article>
+            <article class="milestone-card">
+              <strong>100 total quarks</strong>
+              <p>Unlocks subatomic particle creation.</p>
+              <span id="particle-creation-status">Locked</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-view info-view hidden" id="help-view">
+          <h2>Help</h2>
+          <div class="help-copy">
+            <p>Click Collect to gain dust.</p>
+            <p>You adds 1 per second and 1 per click.</p>
+            <p>Multiplier increases M.</p>
+            <p>Temperature increases T.</p>
+            <p class="formula">Gain = M(Y)<sup>T</sup></p>
+            <p>Y = 1 + You level</p>
+            <p>M = 1 + Multiplier level</p>
+            <p>T = 1 + (Temperature level × 0.1)</p>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="game.js"></script>
+  </body>
+</html>
